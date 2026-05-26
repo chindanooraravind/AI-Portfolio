@@ -18,8 +18,24 @@ chunks = splitter.split_documents(docs)
 embeddings = OllamaEmbeddings(model="llama3")
 
 # Vector DB
-vectorstore = FAISS.from_documents(chunks, embeddings)
-retriever = vectorstore.as_retriever()
+
+# vectorstore = FAISS.from_documents(chunks, embeddings)
+# retriever = vectorstore.as_retriever()
+
+# Vector DB - instead of retrieval lets persist 
+import os
+if os.path.exists("faiss_index"):
+    print("loading existing FAISS Index ....")
+    vectorstore=FAISS.load_local(
+        "faiss_index",
+        embeddings,
+        allow_dangerous_deserialization=True
+    )
+else:
+    print("creating faiss index ...")
+    vectorstore=FAISS.from_documents(chunks,embeddings)
+    vectorstore.save_local("faiss_index")
+retriever = vectorstore.as_retriever() 
 
 # LLM
 llm = ChatOllama(model="llama3", temperature=0)
