@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+.DS_Store
+.vscode/
+*.code-workspace
+venv/
+__pycache__/
+*.pyc
+faiss_index/
